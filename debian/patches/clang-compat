@@ -1,0 +1,15 @@
+Index: gmic/CMakeLists.txt
+===================================================================
+--- gmic.orig/CMakeLists.txt
++++ gmic/CMakeLists.txt
+@@ -100,7 +100,9 @@ set(COMPILE_FLAGS "-Dgmic_build -Dcimg_u
+ if(APPLE)
+    set(COMPILE_FLAGS "${COMPILE_FLAGS} -mmacosx-version-min=10.8 -stdlib=libc++ -Wno-error=c++11-narrowing -Wc++11-extensions -fpermissive")
+ else()
+-  set(COMPILE_FLAGS "${COMPILE_FLAGS} -Wno-error=narrowing -fno-ipa-sra -fpermissive")
++  if(NOT "${CMAKE_C_COMPILER}" MATCHES "clang")
++    set(COMPILE_FLAGS "${COMPILE_FLAGS} -Wno-error=narrowing -fno-ipa-sra -fpermissive")
++  endif()
+ endif()
+ 
+ if(NOT "${PRERELEASE_TAG}" STREQUAL "")

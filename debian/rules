@@ -1,4 +1,44 @@
 #!/usr/bin/make -f
 
+export QT_SELECT=qt5
+export DEB_LDFLAGS_MAINT_APPEND := -Wl,--as-needed
+
+ifeq (mipsel,$(DEB_HOST_ARCH))
+CLANG_BUILD := -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+endif
+
+GMIC_FLAGS = -DCMAKE_BUILD_TYPE=Release -DENABLE_DYNAMIC_LINKING=ON
+GMIC_QT_FLAGS = $(GMIC_FLAGS) -DGMIC_PATH=../src -DGMIC_LIB_PATH=../build-gmic
+
+override_dh_auto_configure:
+	dh_auto_configure -Bbuild-gmic -- $(CLANG_BUILD) -DBUILD_LIB_STATIC=OFF $(GMIC_FLAGS)
+	dh_auto_configure -Dgmic-qt -Bbuild-gmic-qt -- $(GMIC_QT_FLAGS) -DGMIC_QT_HOST=none
+	dh_auto_configure -Dgmic-qt -Bbuild-gmic-krita -- $(GMIC_QT_FLAGS) -DGMIC_QT_HOST=krita
+	dh_auto_configure -Dzart -Bzart -- GMIC_PATH=../src GMIC_LIB_PATH=../build-gmic GMIC_DYNAMIC_LINKING=on
+
+override_dh_auto_build:
+	dh_auto_build -Bbuild-gmic
+	dh_auto_build -Dgmic-qt -Bbuild-gmic-qt
+	dh_auto_build -Dgmic-qt -Bbuild-gmic-krita
+	dh_auto_build -Dzart -Bzart
+
+override_dh_auto_install:
+	dh_auto_install -Bbuild-gmic
+	mkdir -p $(CURDIR)/debian/tmp/usr/bin
+	cp zart/zart $(CURDIR)/debian/tmp/usr/bin/zart
+	mkdir -p $(CURDIR)/debian/tmp/etc/bash_completion.d/
+	cp resources/gmic_bashcompletion.sh $(CURDIR)/debian/tmp/etc/bash_completion.d/gmic
+	cp build-gmic-krita/gmic_krita_qt $(CURDIR)/debian/tmp/usr/bin
+
+override_dh_auto_clean:
+	dh_auto_clean -Bbuild-gmic
+	dh_auto_clean -Dgmic-qt -Bbuild-gmic-qt
+	dh_auto_clean -Dgmic-qt -Bbuild-gmic-krita
+	# the shipped makefile is evil, it assumes to use qt5 for x86_64-linux-gnu
+	# ignore errors...
+	-dh_auto_clean -Dzart -Bzart
+
 %:
 	dh $@
+
+# vim:ts=4 sw=2 noet
