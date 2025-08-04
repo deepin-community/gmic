@@ -1,5 +1,630 @@
-template-repository (1.0-1) unstable; urgency=medium
+gmic (2.9.4-4.1) unstable; urgency=medium
 
-  * Initial release
+  * Non-maintainer upload
+  * [b0ed26ca] Stop building gimp-gmic (Closes: #1088067)
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 05 Dec 2024 19:39:27 -0500
+
+gmic (2.9.4-4) unstable; urgency=medium
+
+  * [131e7db] Build libgmic with clang on mipsel.
+  * [9da7be7] Use CMAKE_*_COMPILER.
+  * [d313501] Wrap cmake variable as string for MATCHES
+  * [5fbf837] CMAKE_C_COMPILER is a full path
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 17 Feb 2021 00:44:19 +0100
+
+gmic (2.9.4-3) unstable; urgency=medium
+
+  * [c74ea06] Try again.
+    Building in a clean source directory failed again on mipsel.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 14 Feb 2021 22:22:43 +0100
+
+gmic (2.9.4-2) unstable; urgency=medium
+
+  * [3d778a0] Build with -O0 on mipsel.
+    gcc/g++ is eating RAM again :(
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 14 Feb 2021 21:27:31 +0100
+
+gmic (2.9.4-1) unstable; urgency=medium
+
+  * [800fc82] New upstream version 2.9.4
+    Closes: #949211
+  * [bd7cd77] opencv4 supported from upstream
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 30 Jan 2021 00:12:19 +0100
+
+gmic (2.4.5-1.1) unstable; urgency=low
+
+  [ Ying-Chun Liu (PaulLiu) <paulliu@debian.org> ]
+  * Non-maintainer upload.
+
+  [ Peter Michael Green <plugwash@debian.org> ]
+  * Make package build with opencv 4 (Closes: #922582)
+    + Bump libopencv-dev build-dependency as I am not attempting to retain
+      compatibility with older opencv versions, someone who knows the
+      buildsystem better can do that if they wish.
+    + Change pkg-config file for opencv from "opencv" to "opencv4".
+    + Change/add a bunch of #include statements.
+
+ -- Ying-Chun Liu (PaulLiu) <paulliu@debian.org>  Tue, 12 Nov 2019 07:25:35 +0000
+
+gmic (2.4.5-1) unstable; urgency=medium
+
+  * [592c9d2] Update upstream source from tag 'upstream/2.4.5'
+    Update to upstream version '2.4.5'
+    with Debian dir e983597c57375c4c84914cdf90d7ae17dd296111
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 16 Jan 2019 21:00:37 +0100
+
+gmic (2.4.3-1) unstable; urgency=medium
+
+  * [82fd7ee] Update upstream source from tag 'upstream/2.4.3'
+    Update to upstream version '2.4.3'
+    with Debian dir b5063d8f16c042266d1d66454291bc13d1922fe6
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 06 Jan 2019 18:43:34 +0100
+
+gmic (2.4.2-2) unstable; urgency=medium
+
+  [ Pino Toscano ]
+  * [9085ecd] Build the plugin for krita.
+    Build gmic-qt once more for the "krita" host, and install the result
+    into a new krita-gmic binary package.
+
+  [ Bernd Zeimetz ]
+  * [bd67baa] Merge branch 'add-krita-gmic' into 'master'
+    Build the plugin for krita
+    See merge request debian/gmic!3
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 15 Dec 2018 23:19:34 +0100
+
+gmic (2.4.2-1) unstable; urgency=medium
+
+  * [f0be9ab] Update upstream source from tag 'upstream/2.4.2'
+    Update to upstream version '2.4.2'
+    with Debian dir 55a225d6fb5485923c4ac6e9a06ab84cd32b1aee
+  * [d6c8988] Removing patches, applied upstream.
+  * [8b34451] Cmake dev files are in usr/lib/*/cmake now.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 15 Dec 2018 23:15:08 +0100
+
+gmic (2.4.1-3) unstable; urgency=medium
+
+  [ Pino Toscano ]
+  * [684a080] Change builddir of gmic-qt to build-gmic-qt.
+    Change the build directory of gmic-qt from a subdirectory of the sources
+    to a top-level directory; this will help debhelper in cleaning the build
+    directory, as it can just wipe it.
+  * [b3bdb48] Use debhelper to build & clean everything.
+    Pass the proper combinations of source & build directories: this has few
+    advantages:
+    - all the proper flags for cmake/qmake are passed, no need to manually
+      take care of them
+    - CFLAGS/CXXFLAGS/etc are handled too
+    - the parallel option of debhelper is respected too
+    Also switch to dh_auto_clean for proper clean handling.
+  * [c6868df] Move common gmic-qt build flags to a variable
+  * [03f988c] Disable static build of libgmic.
+    It is not installed, so do not waste time building it.
+  * [31a1738] Change build directory to build-gmic.
+    Use a fixed name for it, so it will be possible in the future to use
+    artifacts in it in a simpler way.
+  * [3c0b61d] Link all binaries dynamically.
+    Switch the build of all the binaries to dynamically link to libgmic,
+    instead of building their own copies of gmic; this drastically reduces
+    the build time, and avoids different build configurations for the gmic
+    build copies in the binaries.
+    Add a patch for zart so it is possible to specify the right path to the
+    build gmic libraries.
+    As result, tighten the libgmic1 dependencies everywhere.
+  * [536b4d6] Explicitly pass GMIC_PATH for zart
+  * [770685e] Link in as-needed mode.
+    Reduce the overlinking, especially now that all the binaries use the
+    shared gmic library.
+
+  [ Bernd Zeimetz ]
+  * [9484742] Merge branch 'build-improvements' into 'master'
+    Various build improvements
+    See merge request debian/gmic!1
+
+  [ Pino Toscano ]
+  * [d9a8811] Bump cmake build dependency to 3.12.
+    This is what the upstream build system requires, and this version is
+    not in stable.
+  * [11cb24b] Simplify install files.
+    Do not specify the destination in case it is the same as the source.
+  * [700f77e] Stop using dh-exec.
+    There is no more need for environment variables in install files, so
+    stop using dh-exec for some of the install files.
+  * [d2e2a0e] Install the cmake config files of libgmic
+  * [2eae082] Remove ${shlibs:Depends} from libgmic-dev.
+    There are no binaries in libgmic-dev.
+
+  [ Bernd Zeimetz ]
+  * [6220b5d] Merge branch 'various-misc-changes' into 'master'
+    Various misc changes
+    See merge request debian/gmic!2
+  * [c03f25d] Don't install CImg.h.
+    Thanks to Andreas Beckmann (Closes: #913406)
+  * [bbe531a] cmake >= 3.12 is required.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 11 Nov 2018 17:44:45 +0100
+
+gmic (2.4.1-2) unstable; urgency=medium
+
+  * [072ba29] Make d/rules clean work on !amd64.
+    The shipped makefile is evil, it assumes to use qt5 for x86_64-linux-gnu
+    So ignore errors...
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 10 Nov 2018 00:16:43 +0100
+
+gmic (2.4.1-1) unstable; urgency=medium
+
+  * [303ef79] Update upstream source from tag 'upstream/2.4.1'
+    Update to upstream version '2.4.1'
+    with Debian dir a03d4170249136feef23de4800ae2d5ff63d87fe
+    - Uses https now, Closes: #907056
+    - URLs are stable now and don't use sourceforge
+      Closes: #798793
+    - New upload Closes: #898003
+  * [4b41660] Add cmake
+  * [496f75a] Use dh only - for cmake.
+  * [8b4b670] snapshot changelog
+  * [bd00bcb] Removing patches, not needed anymore.
+  * [e7c5ea3] Add libgraphicsmagick++1-dev as dependency
+  * [7fdf4c9] try more stuff
+  * [7a028ab] Use -DCMAKE_BUILD_TYPE=Release - None breaks build :(
+  * [82a02ba] Also build zart
+  * [223da88] Add more build stuff to debian/rules
+  * [377beb8] dh misses some features..
+  * [c876dd9] Update compat, remove .fr manpage
+  * [340bee2] zart needs qmake
+  * [e3f7490] Updating git urls
+  * [74cfea8] Add gitlab ci config
+  * [4f58671] cmake installs to multiarch directory
+    fix .install files.
+  * [3b24a37] Use *.deb as artifact.
+  * [d084b43] Revert "Use *.deb as artifact."
+    This reverts commit 3b24a37bdc0a96b17e3089f2a540d1292b0d74ac.
+    ... we use aptly...
+  * [e8d0bdc] Build with qt5 instead of qt4. (Closes: #874889)
+  * [8836ea2] Add qttools5-dev-tools as build-dep
+  * [b253c15] Add qttools5-dev as build-dep
+  * [0afba41] Add qt5-default as build-dep.
+  * [74907be] Use qtchooser.
+  * [f8f15ac] Bump debhelper compat
+  * [7e189e6] There are no autopkgtests.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 07 Nov 2018 23:15:09 +0100
+
+gmic (1.7.9+zart-4) unstable; urgency=medium
+
+  * [3dc818a] rise minimal memory, use -O0 on mips.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Fri, 16 Dec 2016 21:00:17 +0100
+
+gmic (1.7.9+zart-3) unstable; urgency=medium
+
+  * [86a3cfa] Ensure we disable optimization on slow arches
+    - and on those with small amounts of memory.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Fri, 16 Dec 2016 01:05:06 +0100
+
+gmic (1.7.9+zart-2) unstable; urgency=medium
+
+  * [c754567] Build-depend on bash-completion.
+    Quick fix for FTBFS where /etc/bash_completion.d only exists on a few
+    buildds.
+    Thanks to Adrian Bunk (Closes: #848185)
+
+ -- Bernd Zeimetz <bzed@debian.org>  Thu, 15 Dec 2016 00:51:47 +0100
+
+gmic (1.7.9+zart-1) unstable; urgency=medium
+
+  * [38a82aa] Fix build options
+  * [2ccfb41] Merge tag 'upstream/1.7.9'
+    Upstream version 1.7.9
+  * [dbfb447] Refreshing patches
+  * [b2ffc73] Support opencv 3.1.
+    Thanks to Nobuhiro Iwamatsu (Closes: #841246)
+  * [5d940c9] Updating changelog
+  * [513bdc7] Merge tag 'upstream/1.7.9+zart'
+    Upstream version 1.7.9+zart
+  * [4027a04] Add patch to fix gmic location in zart.pro
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 03 Dec 2016 17:50:28 +0100
+
+gmic (1.6.8-3) unstable; urgency=medium
+
+  * [0e17dac] Add hardening flags.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 16 Jan 2016 17:12:03 +0100
+
+gmic (1.6.8-2) unstable; urgency=medium
+
+  * [ab64ac5] Fix weird build/linker issues on powerpc.
+    Build with -O1 for now.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 16 Jan 2016 15:10:49 +0100
+
+gmic (1.6.8-1) unstable; urgency=medium
+
+  * [08d10e9] Merge tag 'upstream/1.6.8'
+    Upstream version 1.6.8
+  * [0cee604] Refreshing patches.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 06 Jan 2016 20:42:40 +0100
+
+gmic (1.6.7-1) unstable; urgency=medium
+
+  * [2dd1114] Merge tag 'upstream/1.6.5.1'
+    Upstream version 1.6.5.1
+    Closes: #794877
+  * [e0668cb] Refreshing patches.
+  * [87212e9] Updating changelog.
+  * [aa8ea31] Using libcurl4-openssl-dev.
+  * [7d0fb49] Updating watch file.
+  * [8788de5] Merge tag 'upstream/1.6.7'
+    Upstream version 1.6.7
+  * [b603da3] refreshing patches.
+  * [9d0aea8] Use upstream NOSTRIP option.
+  * [e1a3182] Install CImg.h as gmic_CImg.h.
+    As discussed with upstream we ship gmic's CImg.h as
+    gmic_CImg.h as it is usually a pre-release / unfinished
+    version, compared to the one released and shipped in
+    the cimg-dev package. People who want to use gmic's
+    features and link with libglib need the version gmic
+    was built with - and building gmic with the released
+    version is not possible. (Closes: #801162)
+  * [56301b3] Use libopencv-dev instead of hand-picked OpenCV packages.
+  * [8b8009f] Fix dh_install for zart.
+
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 28 Nov 2015 18:22:49 +0100
+
+gmic (1.6.2.0-1) unstable; urgency=medium
+
+  * [418ea338] Merge tag 'upstream/1.6.2.0'
+    Upstream version 1.6.2.0
+  * [7044920b] Refreshing patches.
+  * [1fde2913] Add libcv/libhighgui-dev as dependency.
+  * [6fd0cdcb] Add libcurl-dev
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 19 Apr 2015 14:08:46 +0200
+
+gmic (1.6.0.1-1) unstable; urgency=medium
+
+  * [43756de5] Merge tag 'upstream/1.6.0.1'
+    Upstream version 1.6.0.1
+  * [4a698aee] refreshing patches.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 22 Oct 2014 23:04:52 +0200
+
+gmic (1.6.0.0-1) unstable; urgency=medium
+
+  * [2448f469] Merge tag 'upstream/1.5.8.6'
+    Upstream version 1.5.8.6
+  * [4207852d] Refreshing patches.
+  * [3a1b1d4d] Remove libav* build-dependencies.
+    They are not used right now.
+  * [192a118f] Keep building zart - was disable dby upstream.
+  * [3d668b4a] Merge tag 'upstream/1.6.0.0'
+    Upstream version 1.6.0.0
+  * [c369f4c8] Re-check build-dependencies.
+    libav-* were removed before already. (Closes: #755815)
+  * [a6ebfc17] Refreshing patches.
+  * [d056c91f] copy zart/Makefile only if it exists.
+  * [68d88091] Update gmic-zart.install
+
+ -- Bernd Zeimetz <bzed@debian.org>  Tue, 26 Aug 2014 17:36:19 +0200
+
+gmic (1.5.7.1-4) unstable; urgency=low
+
+  * [223f8c2f] Simplyfy optimization setting selection.
+    Low memory always results in -O0 now.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 13 Oct 2013 14:34:39 +0200
+
+gmic (1.5.7.1-3) unstable; urgency=low
+
+  * [08debe3f] Build with -O1 on slow architectures.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 12 Oct 2013 23:37:24 +0200
+
+gmic (1.5.7.1-2) unstable; urgency=low
+
+  * [6c37ae00] Updating description as suggested by upstream.
+  * [ef5bff79] Drop -mtune=generic option from upstream's Makefile.
+    Thanks to KiBi (Closes: #725525)
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 06 Oct 2013 22:10:09 +0200
+
+gmic (1.5.7.1-1) unstable; urgency=low
+
+  * [8093b566] Merge tag 'upstream/1.5.5.2'
+    Upstream version 1.5.5.2
+  * [847b448f] Refreshing patches.
+  * [4c998e58] Updating changelog
+  * [a1021632] Drop kfreebsd-support patch, it was applied upstream.
+  * [fe31bbc1] Imported Upstream version 1.5.7.0
+  * [9c47c7df] Imported Upstream version 1.5.7.1
+    - Should build fine under hurd (Closes: #705708,
+      thanks to Pino Toscano).
+    - Upstream tarball doesn't need to be repackaged anymore, dropping
+      +dfsg from version number.
+  * [abd7c2cb] Different hack to enable building on machines with low ram.
+    Instead of disabling all optimizations, use
+    -fno-tree-pre on machines with low ram / slow cpus.
+  * [a8882c63] Use MANDATORY_LDFLAGS/MANDATORY_CFLAGS.
+  * [9507d072] Fix passing MANDATORY_* flags to make.
+  * [3af37ccf] Add missing library symlink for devel package.
+  * [b17c2c9a] Add libgmic1 and libgmic-dev.
+  * [d92ef057] Fix gmic.install and dh_install calls.
+  * [967b8767] Refreshing patches.
+  * [d81f1188] Remove special git-import-orig rules from debian/gbp.conf
+  * [0e043a5c] Remove dh_auto_configure override. zart/Makefile is not
+    being shipped in the tarball anymore.
+  * [33ae4a9b] Fixing various lintian warnings.
+  * [00ead79b] Merge branch 'upstream'
+    Upstream tarball re-release with fixes for our lintian errors.
+    Thanks, David!
+  * [ec797fd5] Revert "Remove dh_auto_configure override."
+    This reverts commit 0e043a5c876613884c3ace8ad7a7ebcbfb4deef9.
+  * [23229c12] Revert "Add missing library symlink for devel package."
+    This reverts commit 3af37ccfc8da06d5247e42e9bfb9149686cd2e5e.
+  * [9ed51a86] Add patch fixing ldconfig-symlink-referencing-wrong-file.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 22 Sep 2013 21:43:33 +0200
+
+gmic (1.5.1.6+dfsg-4) unstable; urgency=low
+
+  * [4ed5416f] Fix author/copyright information in debian/copyright and zart.1
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 04 Jul 2012 18:43:34 +0200
+
+gmic (1.5.1.6+dfsg-3) unstable; urgency=low
+
+  * [152547f5] Add missing Breaks/Replaces.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Thu, 28 Jun 2012 19:55:47 +0200
+
+gmic (1.5.1.6+dfsg-2) unstable; urgency=low
+
+  * [4012fb0e] Split zart into its own package.
+    This avoids pulling QT and X for a command-line tool.
+  * [e420fdb0] Add a manpage for zart.
+  * [eff81582] Remove debian/dirs to avoid empty directories.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Fri, 22 Jun 2012 18:12:19 +0200
+
+gmic (1.5.1.6+dfsg-1) unstable; urgency=low
+
+  * [cfe57a54] Merge tag 'upstream/1.5.1.6+dfsg'
+    Upstream version 1.5.1.6+dfsg
+  * [fbc1e4d2] Refreshing patches.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Fri, 22 Jun 2012 17:03:21 +0200
+
+gmic (1.5.1.5+dfsg-1) unstable; urgency=low
+
+  * [d3cb2da4] Remove override_dh_clean from .PHONY.
+    Some debhelper versions still seem to recognize it as empty target...
+  * [982453de] Merge commit 'upstream/1.5.0.9+dfsg'
+  * [7c82f405] refreshing patches.
+  * [7093fa88] Updating changelog.
+  * [f8500c13] Merge tag 'upstream/1.5.1.0+dfsg'
+    Upstream version 1.5.1.0+dfsg
+  * [1e04612f] Rfreshing patches.
+  * [ffd49557] Updating changelog.
+  * [54eefb26] Merge tag 'upstream/1.5.1.5+dfsg'
+    Upstream version 1.5.1.5+dfsg
+  * [317788b2] Updating changelog.
+  * [03467dc0] Refreshing patches.
+  * [706f87a9] Backup zart/Makefile
+  * [95621201] Add build-dependencies, description and install files for zart.
+  * [eefe5f9b] Add patch to fix building with ne OpenCV.
+  * [bdadee8c] Updating changelog.
+  * [ccb14826] Add libopencv-objdetect-dev build-dependency.
+  * [6b6322ef] More opencv fixes.
+  * [303ff61c] Add libopencv-imgproc-dev as build-dependency.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Thu, 21 Jun 2012 12:23:27 +0200
+
+gmic (1.5.0.8+dfsg-1) unstable; urgency=low
+
+  * [b7ddf3a2] Merge commit 'upstream/1.5.0.8+dfsg'
+  * [a0dd17c6] Make GMIC build with recent OpenCV versions. (Closes: #652763)
+  * [7cb4a04f] Don't use configure, call src/Makefile directly.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sat, 21 Jan 2012 12:37:30 +0100
+
+gmic (1.5.0.7+dfsg-1) unstable; urgency=low
+
+  * [97e3ecbd] Merge commit 'upstream/1.5.0.7+dfsg'
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 04 Dec 2011 19:55:28 +0100
+
+gmic (1.5.0.5+dfsg-1) unstable; urgency=low
+
+  * [4978288c] Removing Jakub Wilk from Uploaders as requested.
+    Thanks for your work Jakub!
+  * [b7314e4e] Merge commit 'upstream/1.5.0.5+dfsg'
+  * [866550ef] Refactoring debian/rules
+  * [fce14609] Bumping Standards-Version, no changes needed.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 30 Oct 2011 19:06:34 +0100
+
+gmic (1.5.0.0+dfsg-1) unstable; urgency=low
+
+  * [20fc4583] Merge commit 'upstream/1.5.0.0+dfsg'
+  * [ec62b62d] Dropping patch for configure fixes, not necessary anymore.
+  * [87daddc5] Refreshing patches.
+  * [833f51b5] Remove lib*magick++*-dev build-deps, not needed anymore.
+  * [7592f26e] Add libopenexr-dev as build-dependency.
+  * [5a8d6059] Don't try to install upstream's changelog, not shipped anymore.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Tue, 26 Jul 2011 15:17:46 +0200
+
+gmic (1.4.8.1+dfsg-2) unstable; urgency=low
+
+  * [24dc0e58] Add patch to fix FTBFS on various architectures.
+    Thanks to Hector Oron (Closes: #614273)
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 20 Feb 2011 22:52:04 +0100
+
+gmic (1.4.8.1+dfsg-1) unstable; urgency=low
+
+  * [fab6cc4d] Merge commit 'upstream/1.4.8.1+dfsg'
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 16 Feb 2011 22:37:42 +0100
+
+gmic (1.4.8.0+dfsg-1) unstable; urgency=low
+
+  * [33847b44] Merge commit 'upstream/1.4.8.0+dfsg'
+  * [6e771817] Refreshing patches.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Thu, 10 Feb 2011 13:13:22 +0100
+
+gmic (1.4.4.2+dfsg-1) experimental; urgency=low
+
+  * [3253ce08] Merge commit 'upstream/1.4.4.2+dfsg'
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 07 Nov 2010 18:47:00 +0100
+
+gmic (1.4.2.0+dfsg-1) experimental; urgency=low
+
+  * [f93deb46] Merge commit 'upstream/1.4.2.0+dfsg'
+  * [00290d4f] Refreshing patches.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 20 Oct 2010 20:57:01 +0200
+
+gmic (1.4.0.0+dfsg-1) experimental; urgency=low
+
+  * [6fd356d5] Merge commit 'upstream/1.4.0.0+dfsg'
+  * [331aef59] Adding new build-dependencies.
+  * [86b49de0] Refreshing patches.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Fri, 03 Sep 2010 14:49:11 +0200
+
+gmic (1.3.9.0+dfsg-1) unstable; urgency=low
+
+  * [23ccb979] Merge commit 'upstream/1.3.9.0+dfsg'
+  * [bef99d90] Install upstream changelog.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Mon, 02 Aug 2010 10:26:51 +0200
+
+gmic (1.3.7.1+dfsg-1) unstable; urgency=low
+
+  * [b573582f] Merge commit 'upstream/1.3.7.1+dfsg'
+
+ -- Bernd Zeimetz <bzed@debian.org>  Mon, 19 Jul 2010 19:11:21 +0200
+
+gmic (1.3.6.0+dfsg-1) unstable; urgency=low
+
+  * [204cd64b] Merge commit 'upstream/1.3.6.0+dfsg'
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 30 Jun 2010 18:42:20 +0200
+
+gmic (1.3.5.7+dfsg-1) unstable; urgency=low
+
+  * [f733c366] Merge commit 'upstream/1.3.5.7+dfsg'
+  * [ee1cba19] Refreshing patches.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 23 Jun 2010 02:23:16 +0200
+
+gmic (1.3.5.4+dfsg-2) unstable; urgency=low
+
+  * [e14a94e2] Rise required amount of RAM to avoid FTBFS on s390.
+    (*sigh* - these machines should have neough RAM and swap....)
+
+ -- Bernd Zeimetz <bzed@debian.org>  Mon, 07 Jun 2010 19:37:02 +0200
+
+gmic (1.3.5.4+dfsg-1) unstable; urgency=low
+
+  * [821186d5] Fix dversionmangle in watch file.
+  * [8fab3d8a] Merge commit 'upstream/1.3.5.4+dfsg'
+    - This icludes a fix for the FTBFS on various archicetures.
+      (Closes: #584304)
+  * [7550bc35] Refresh patches.
+  * [d682b862] Don't gunzip manpages and create directories before make
+    install.
+  * [6dccd71b] Tidy debian/rules' clean target.
+  * [dba56977] Install bash completion
+
+ -- Bernd Zeimetz <bzed@debian.org>  Mon, 07 Jun 2010 13:53:22 +0200
+
+gmic (1.3.5.1+dfsg2-1) unstable; urgency=low
+
+  * Upstream released a bugfix-release for 1.3.5.1 - unfortunately with the
+    same version number.
+  * [0e506788] Merge commit 'upstream/1.3.5.1+dfsg2'
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 26 May 2010 16:48:40 +0200
+
+gmic (1.3.5.1+dfsg-1) unstable; urgency=low
+
+  * [97366020] Use -O0 in case the system we build on has less than 1GB
+    RAM.
+  * [6aca1038] Merge commit 'upstream/1.3.5.1+dfsg'
+  * [fe6b2057] Fix awk call to evaluate the available memory.
+  * [6806172f] Updating patches.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 26 May 2010 12:13:50 +0200
+
+gmic (1.3.5.0+dfsg-1) unstable; urgency=low
+
+  * [4efc6ba8] Add Enhances/Depends on gimp.
+  * [1cec005d] Merge commit 'upstream/1.3.5.0+dfsg'
+  * [4a1816e8] Don't use pristine-tar on git-import-orig. We need to
+    recreate the tarball after removing non-free material.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Sun, 16 May 2010 22:48:10 +0200
+
+gmic (1.3.5.0~beta1+dfsg-1) experimental; urgency=low
+
+  * Beta version of the upcoming upstream version.
+  * [55bc031b] Merge commit 'upstream/1.3.5.0.beta1+dfsg'
+  * [35c39744] Bumping Standards-Version to 3.8.4, no changes needed.
+  * [1e7913f6] debian/control: Adding VCS Information.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Wed, 28 Apr 2010 19:49:35 +0200
+
+gmic (1.3.4.1+dfsg-4) unstable; urgency=low
+
+  * [973d62d8] Small typo making the kfreebsd fix fail. Fixed now.
+  * [cd7344ee] Use -O0 on mips to avoid internal errors in g++.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Tue, 20 Apr 2010 22:58:25 +0200
+
+gmic (1.3.4.1+dfsg-3) unstable; urgency=low
+
+  * [045a2f86] Remove strip commands from src/Makefile. dh_strip takes
+    care of stripping if necessary.
+  * [d3740bdf] Add patch to make gmic build on kfreebsd.
+  * [61119501] Use -O0 on arm to stop g++ from using even more memory.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Tue, 20 Apr 2010 18:09:57 +0200
+
+gmic (1.3.4.1+dfsg-2) unstable; urgency=low
+
+  * [77f87ac2] Update jwilk's email address to jwilk@d.o
+  * [955493d8] Updating debian/copyright.
+  * [6f168dd4] Add additional information about src/gmic_def.h to
+    debian/copyright.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Tue, 20 Apr 2010 11:15:26 +0200
+
+gmic (1.3.4.1+dfsg-1) unstable; urgency=low
+
+  [ Jakub Wilk ]
+  * Initial release (closes: #532629).
+
+  [ Bernd Zeimetz ]
+  * Removing non-free content (the html documentation comes without
+    sources and was generated using a non-free album generator).
+  * Also removing upstream's debian folder.
+
+ -- Bernd Zeimetz <bzed@debian.org>  Tue, 13 Apr 2010 22:56:12 +0200
